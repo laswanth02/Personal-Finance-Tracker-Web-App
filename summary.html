@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summary</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<h1>Expense Summary</h1>
+
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Total Spent</th>
+    </tr>
+
+    {% for s in summary %}
+    <tr>
+        <td>{{ s[0] }}</td>
+        <td>{{ s[1] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+from flask import Flask, render_template, request, redirect
+import sqlite3
+
+app = Flask(__name__)
+
+def init_db():
+    con = sqlite3.connect('finance.db')
+    cur = con.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT,
+            amount REAL,
+            category TEXT,
+            date TEXT
+        )
+    ''')
+    con.commit()
+    con.close()
+
+init_db()
+
+@app.route('/')
+def index():
+    con = sqlite3.connect('finance.db')
+    cur = con.cursor()
+    cur.execute("SELECT * FROM transactions")
+    data = cur.fetchall()
+    con.close()
+    return render_template("index.html", data=data)
+
+@app.route('/add', methods=['GET', 'POST'])
+def add_transaction():
+    if request.method == "POST":
+        t_type = request.form['type']
+        amount = request.form['amount']
+        category = request.form['category']
+        date = request.form['date']
+
+        con = sqlite3.connect('finance.db')
+        cur = con.cursor()
+        cur.execute("INSERT INTO transactions (type, amount, category, date) VALUES (?, ?, ?, ?)",
+                    (t_type, amount, category, date))
+        con.commit()
+        con.close()
+        return redirect('/')
+    return render_template("a_
